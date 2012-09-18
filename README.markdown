@@ -9,7 +9,7 @@ This client requires ff_common to work.
 Example Member Creation
 -----------------------
 
-    	Member m = new Member();
+ 	Member m = new Member();
 	m.setUserName("johndoe");
 	m.setEmail("test@test.net");
 	m.setFirstName("John");
