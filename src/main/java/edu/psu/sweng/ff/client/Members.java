@@ -106,15 +106,34 @@ public class Members {
 		return m;
 	
 	}
-	
-	public static String create(Member m) {
+
+	public static Member update(Member m) {
+		
+		String url = BASE_URL + "id/" + m.getId();
+		
+		WebResource r = c.resource(url);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+				.entity(m).put(ClientResponse.class);
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return m;
+		} else {
+			System.err.println(response);
+		}
+		return null;
+		
+	}
+
+	public static Member create(Member m) {
 		
 		String url = BASE_URL;
 		
 		WebResource r = c.resource(url);
 		ClientResponse response = r.entity(m).post(ClientResponse.class);
 		URI u = response.getLocation();
-		return u.toString();
+		String uri = u.toString();
+		String id = uri.substring(uri.lastIndexOf('/') + 1);
+		m.setId(Integer.parseInt(id));
+		return m;
 		
 	}
 

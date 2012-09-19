@@ -21,6 +21,33 @@ public class MembersTest
     }
     
     @Test
+    public void testUpdateMember() {
+    	
+    	Member m = new Member();
+		m.setUserName("johndoe");
+		m.setEmail("test@test.net");
+		m.setFirstName("John");
+		m.setLastName("Doe");
+		m.setHideEmail(false);
+		m.setMobileNumber("717-555-1212");
+		m.setPassword("test_password");
+		
+		m = Members.create(m);
+		m.setEmail("new@email.com");
+    	Members.authenticate("johndoe", "test_password");
+
+    	// must re-authenticate after updating
+		Members.update(m);
+    	Members.authenticate("johndoe", "test_password");
+    	
+		
+		Member m2 = Members.getByUserId(String.valueOf(m.getId()));
+		assertEquals("new@email.com", m2.getEmail());
+		
+    	
+    }
+    
+    @Test
     public void testGetById() {
     	
     	Members.authenticate("test", "password");
@@ -48,25 +75,16 @@ public class MembersTest
 		m.setLastName("Doe");
 		m.setHideEmail(false);
 		m.setMobileNumber("717-555-1212");
-		m.setPassword("password");
+		m.setPassword("test_password");
 		
-		String uri = Members.create(m);
-		System.out.println("URI of created Member: " + uri);
+		Member c = Members.create(m);
 		
-		String id = uri.substring(uri.lastIndexOf('/') + 1);
-		
-		Member m2 = Members.getByUserId(id);
+    	Members.authenticate("johndoe", "test_password");
+
+		Member m2 = Members.getByUserId(String.valueOf(c.getId()));
 		assertEquals(m2.getEmail(), m.getEmail());
     	
     }
-    
-    @Test
-    public void testUpdate() {
-    	
-		
-    	
-    }
-
     
     
 }
