@@ -25,7 +25,7 @@ Example Login
 -------------
 
 	Members.authenticate("test", "password");
-	Member m = Members.getSelf(); // gives you the member that just authenticated
+	Member m = Members.getTokenOwner(); // gives you the member that just authenticated
 
 	
 
