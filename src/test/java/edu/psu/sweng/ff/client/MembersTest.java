@@ -57,7 +57,7 @@ public class MembersTest
     }
     
     @Test
-    public void setGetSelf() {
+    public void testGetSelf() {
     	
     	Members.authenticate("test", "password");
     	Member m = Members.getTokenOwner();
