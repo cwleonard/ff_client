@@ -51,8 +51,8 @@ public class MembersTest
     public void testGetById() {
     	
     	Members.authenticate("test", "password");
-    	Member m = Members.getByUserId("0");
-    	assertEquals(0, m.getId());
+    	Member m = Members.getByUserId("1");
+    	assertEquals(1, m.getId());
     	
     }
     
