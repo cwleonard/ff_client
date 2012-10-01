@@ -23,8 +23,10 @@ public class MembersTest
     @Test
     public void testUpdateMember() {
     	
+    	String newUserName = this.generateRandomUserName();
+    	
     	Member m = new Member();
-		m.setUserName("johndoe");
+		m.setUserName(newUserName);
 		m.setEmail("test@test.net");
 		m.setFirstName("John");
 		m.setLastName("Doe");
@@ -34,11 +36,11 @@ public class MembersTest
 		
 		m = Members.create(m);
 		m.setEmail("new@email.com");
-    	Members.authenticate("johndoe", "test_password");
+    	Members.authenticate(newUserName, "test_password");
 
     	// must re-authenticate after updating
 		Members.update(m);
-    	Members.authenticate("johndoe", "test_password");
+    	Members.authenticate(newUserName, "test_password");
     	
 		
 		Member m2 = Members.getByUserId(String.valueOf(m.getId()));
@@ -68,8 +70,10 @@ public class MembersTest
     @Test
     public void testCreate() {
     	
+    	String newUserName = this.generateRandomUserName();
+    	
     	Member m = new Member();
-		m.setUserName("johndoe");
+		m.setUserName(newUserName);
 		m.setEmail("test@test.net");
 		m.setFirstName("John");
 		m.setLastName("Doe");
@@ -79,12 +83,18 @@ public class MembersTest
 		
 		Member c = Members.create(m);
 		
-    	Members.authenticate("johndoe", "test_password");
+    	Members.authenticate(newUserName, "test_password");
 
 		Member m2 = Members.getByUserId(String.valueOf(c.getId()));
 		assertEquals(m2.getEmail(), m.getEmail());
     	
     }
     
-    
+    private String generateRandomUserName() {
+    	
+    	String un = "johndoe";
+    	int r = 1000 + (int)(Math.random() * ((999999 - 1000) + 1));
+    	return un + r;
+    	
+    }
 }
