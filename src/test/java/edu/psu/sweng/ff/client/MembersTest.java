@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.sun.jersey.spi.service.ServiceFinder;
+
 import edu.psu.sweng.ff.common.Member;
 
 /**
@@ -11,6 +13,11 @@ import edu.psu.sweng.ff.common.Member;
  */
 public class MembersTest
 {
+	
+	public MembersTest() {
+		ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
+	}
+	
     @Test
     public void testGetByUserName() {
     	
