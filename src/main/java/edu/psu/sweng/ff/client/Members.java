@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -56,11 +57,13 @@ public class Members {
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
 		Member m = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			m = response.getEntity(Member.class);
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			m = gson.fromJson(json, Member.class);
 		} else {
 			System.err.println(response);
 		}
@@ -75,11 +78,13 @@ public class Members {
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
 		Member m = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			m = response.getEntity(Member.class);
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			m = gson.fromJson(json, Member.class);
 		} else {
 			System.err.println(response);
 		}
@@ -94,11 +99,13 @@ public class Members {
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
 		Member m = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			m = response.getEntity(Member.class);
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			m = gson.fromJson(json, Member.class);
 		} else {
 			System.err.println(response);
 		}
@@ -110,10 +117,13 @@ public class Members {
 	public static Member update(Member m) {
 		
 		String url = BASE_URL + "id/" + m.getId();
-		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(m);
+
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.entity(m).put(ClientResponse.class);
+				.type(MediaType.APPLICATION_JSON).entity(json).put(ClientResponse.class);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			return m;
 		} else {
@@ -127,8 +137,12 @@ public class Members {
 		
 		String url = BASE_URL;
 		
+		Gson gson = new Gson();
+		String json = gson.toJson(m);
+		
 		WebResource r = c.resource(url);
-		ClientResponse response = r.entity(m).post(ClientResponse.class);
+		ClientResponse response = r.entity(json)
+				.type(MediaType.APPLICATION_JSON).post(ClientResponse.class);
 		URI u = response.getLocation();
 		String uri = u.toString();
 		String id = uri.substring(uri.lastIndexOf('/') + 1);

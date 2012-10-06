@@ -1,17 +1,19 @@
 package edu.psu.sweng.ff.client;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.psu.sweng.ff.common.League;
-import edu.psu.sweng.ff.common.LeagueList;
 import edu.psu.sweng.ff.common.Member;
 
 public class Leagues {
@@ -34,12 +36,16 @@ public class Leagues {
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
 		List<League> l = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			LeagueList ll = response.getEntity(LeagueList.class);
-			l = ll.getLeagues();
+			
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			Type collectionType = new TypeToken<List<League>>(){}.getType();
+			l = gson.fromJson(json, collectionType);
+			
 		} else {
 			System.err.println(response);
 		}
@@ -54,11 +60,13 @@ public class Leagues {
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
 		League l = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			l = response.getEntity(League.class);
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			l = gson.fromJson(json, League.class);
 		} else {
 			System.err.println(response);
 		}
@@ -70,10 +78,13 @@ public class Leagues {
 	public static League update(League l) {
 		
 		String url = BASE_URL + l.getId();
-		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(l);
+
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.entity(l).put(ClientResponse.class);
+				.type(MediaType.APPLICATION_JSON).entity(json).put(ClientResponse.class);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			return l;
 		} else {
@@ -86,10 +97,13 @@ public class Leagues {
 	public static League create(League l) {
 		
 		String url = BASE_URL;
-		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(l);
+
 		WebResource r = c.resource(url);
-		ClientResponse response = r.header(TOKEN_HEADER, userToken).entity(l)
-				.post(ClientResponse.class);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken).entity(json)
+				.type(MediaType.APPLICATION_JSON).post(ClientResponse.class);
 		URI u = response.getLocation();
 		String uri = u.toString();
 		String id = uri.substring(uri.lastIndexOf('/') + 1);

@@ -15,7 +15,7 @@ public class MembersTest
 {
 	
 	public MembersTest() {
-		ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
+		//ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
 	}
 	
     @Test
