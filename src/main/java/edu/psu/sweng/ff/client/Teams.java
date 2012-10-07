@@ -13,14 +13,13 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
-import edu.psu.sweng.ff.common.League;
-import edu.psu.sweng.ff.common.Member;
+import edu.psu.sweng.ff.common.Team;
 
-public class Leagues {
+public class Teams {
 
 	private final static String TOKEN_HEADER = "X-UserToken";
 	
-	private final static String BASE_URL = "http://www.amphibian.com/ff_server/resource/league/";
+	private final static String BASE_URL = "http://www.amphibian.com/ff_server/resource/team/";
 
 	private static String userToken;
 	
@@ -30,31 +29,31 @@ public class Leagues {
 		userToken = t;
 	}
 
-	public static List<League> getByMember(Member m) {
+	public static List<Team> getByOwner() {
 	
-		String url = BASE_URL + "?member=" + m.getId();
+		String url = BASE_URL;
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
 				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
-		List<League> l = null;
+		List<Team> teams = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			
 			String json = response.getEntity(String.class);
 			Gson gson = new Gson();
-			Type collectionType = new TypeToken<List<League>>(){}.getType();
-			l = gson.fromJson(json, collectionType);
+			Type collectionType = new TypeToken<List<Team>>(){}.getType();
+			teams = gson.fromJson(json, collectionType);
 			
 		} else {
 			System.err.println(response);
 		}
 		
-		return l;
+		return teams;
 	
 	}
 
-	public static League getById(String id) {
+	public static Team getById(String id) {
 		
 		String url = BASE_URL + id;
 	
@@ -62,31 +61,31 @@ public class Leagues {
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
 				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		
-		League l = null;
+		Team t = null;
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			String json = response.getEntity(String.class);
 			Gson gson = new Gson();
-			l = gson.fromJson(json, League.class);
+			t = gson.fromJson(json, Team.class);
 		} else {
 			System.err.println(response);
 		}
 		
-		return l;
+		return t;
 	
 	}
 
-	public static League update(League l) {
+	public static Team update(Team t) {
 		
-		String url = BASE_URL + l.getId();
+		String url = BASE_URL + t.getId();
 
 		Gson gson = new Gson();
-		String json = gson.toJson(l);
+		String json = gson.toJson(t);
 
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)
 				.type(MediaType.APPLICATION_JSON).entity(json).put(ClientResponse.class);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			return l;
+			return t;
 		} else {
 			System.err.println(response);
 		}
@@ -94,12 +93,12 @@ public class Leagues {
 		
 	}
 
-	public static League create(League l) {
+	public static Team create(Team t) {
 		
 		String url = BASE_URL;
 
 		Gson gson = new Gson();
-		String json = gson.toJson(l);
+		String json = gson.toJson(t);
 
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken).entity(json)
@@ -107,27 +106,8 @@ public class Leagues {
 		URI u = response.getLocation();
 		String uri = u.toString();
 		String id = uri.substring(uri.lastIndexOf('/') + 1);
-		l.setId(Integer.parseInt(id));
-		return l;
-		
-	}
-	
-	public static boolean join(League l) {
-		
-		String url = BASE_URL + l.getId() + "/join";
-
-		Gson gson = new Gson();
-		String json = gson.toJson(l);
-
-		WebResource r = c.resource(url);
-		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.type(MediaType.APPLICATION_JSON).entity(json).post(ClientResponse.class);
-		if (response.getStatus() == Status.OK.getStatusCode()) {
-			return true;
-		} else {
-			System.err.println(response);
-		}
-		return false;
+		t.setId(Integer.parseInt(id));
+		return t;
 		
 	}
 
