@@ -131,5 +131,20 @@ public class Leagues {
 		
 	}
 
+	public static boolean startDraft(League l) {
+		
+		String url = BASE_URL + l.getId() + "/startdraft";
+
+		WebResource r = c.resource(url);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+				.post(ClientResponse.class);
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return true;
+		} else {
+			System.err.println(response);
+		}
+		return false;
+		
+	}
 	
 }
