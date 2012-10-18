@@ -15,6 +15,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.psu.sweng.ff.common.League;
 import edu.psu.sweng.ff.common.Member;
+import edu.psu.sweng.ff.common.Player;
 
 public class Leagues {
 
@@ -145,6 +146,50 @@ public class Leagues {
 		}
 		return false;
 		
+	}
+	
+	public static List<Player> getAvailablePlayers(League l) {
+		
+		String url = BASE_URL + l.getId() + "/players";
+
+		WebResource r = c.resource(url);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		
+		List<Player> lp = null;
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			
+			String json = response.getEntity(String.class);
+			Gson gson = new Gson();
+			Type collectionType = new TypeToken<List<Player>>(){}.getType();
+			lp = gson.fromJson(json, collectionType);
+			
+		} else {
+			System.err.println(response);
+		}
+		
+		return lp;
+		
+	}
+	
+	public static boolean draftPlayer(League l, Player p) {
+		
+		String url = BASE_URL + l.getId() + "/draftplayer";
+
+		Gson gson = new Gson();
+		String json = gson.toJson(p);
+		
+		WebResource r = c.resource(url);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+				.type(MediaType.APPLICATION_JSON).entity(json)
+				.post(ClientResponse.class);
+		
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return true;
+		} else {
+			return false;
+		}
+	
 	}
 	
 }
