@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import edu.psu.sweng.ff.common.League;
 import edu.psu.sweng.ff.common.Member;
+import edu.psu.sweng.ff.common.Player;
+import edu.psu.sweng.ff.common.Team;
 
 public class LeaguesTest {
 
@@ -94,6 +96,65 @@ public class LeaguesTest {
 		assertTrue(list.size() > 0) ;
 		
 	}
+	
+	@Test
+	public void testStartDraft() {
+		
+		String token = Members.authenticate("test", "password");
+		Leagues.setUserToken(token);
+		Teams.setUserToken(token);
+		Member m = Members.getTokenOwner();
+		
+		League l = new League();
+		l.setName("start draft test league");
+		l.setAutoDraft(true);
+		l.setCommissioner(Members.getTokenOwner());
+		l.setWeek(1);
+		
+		l = Leagues.create(l);
+
+		Team t = new Team();
+		t.setLeagueId(l.getId());
+		t.setLogo("logo");
+		t.setName("draft test team 1");
+		t.setOwner(m);
+		
+		t = Teams.create(t);
+		
+		Team t2 = new Team();
+		t2.setLeagueId(l.getId());
+		t2.setLogo("logo");
+		t2.setName("draft test team 2");
+		t2.setOwner(m);
+		
+		t2 = Teams.create(t2);
+		
+		assertTrue(Leagues.startDraft(l));
+		
+	}
+	
+	@Test
+	public void testGetAvailablePlayers() {
+		
+		String token = Members.authenticate("test", "password");
+		Leagues.setUserToken(token);
+		
+		League l = new League();
+		l.setName("get players test league");
+		l.setAutoDraft(false);
+		l.setCommissioner(Members.getTokenOwner());
+		l.setWeek(1);
+		
+		l = Leagues.create(l);
+		
+		assertTrue(Leagues.startDraft(l));
+		
+		List<Player> players = Leagues.getAvailablePlayers(l);
+		assertTrue(players.size() > 0);
+		
+	}
+	
+	
 	
     private String generateRandomUserName() {
     	
