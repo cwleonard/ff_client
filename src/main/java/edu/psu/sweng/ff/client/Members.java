@@ -146,7 +146,9 @@ public class Members {
 		URI u = response.getLocation();
 		String uri = u.toString();
 		String id = uri.substring(uri.lastIndexOf('/') + 1);
-		m.setId(Integer.parseInt(id));
+
+		m = getByUserId(id);
+		
 		return m;
 		
 	}

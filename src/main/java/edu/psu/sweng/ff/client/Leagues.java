@@ -131,6 +131,25 @@ public class Leagues {
 		return false;
 		
 	}
+	
+	public static boolean invite(League l, List<String> emails) {
+		
+		String url = BASE_URL + l.getId() + "/invite";
+
+		Gson gson = new Gson();
+		String json = gson.toJson(emails);
+
+		WebResource r = c.resource(url);
+		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+				.type(MediaType.APPLICATION_JSON).entity(json).post(ClientResponse.class);
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return true;
+		} else {
+			System.err.println(response);
+		}
+		return false;
+		
+	}
 
 	public static boolean startDraft(League l) {
 		

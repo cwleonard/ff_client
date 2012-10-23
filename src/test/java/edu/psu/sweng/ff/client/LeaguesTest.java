@@ -2,6 +2,7 @@ package edu.psu.sweng.ff.client;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -98,6 +99,47 @@ public class LeaguesTest {
 	}
 	
 	@Test
+	public void testInvitations() {
+		
+		String token = Members.authenticate("test", "password");
+		Leagues.setUserToken(token);
+		
+		String ln = generateRandomLeagueName();
+		League l = new League();
+		l.setName(ln);
+		l.setAutoDraft(true);
+		l.setCommissioner(Members.getTokenOwner());
+		l.setWeek(1);
+		
+		l = Leagues.create(l);
+		assertTrue(l.getId() > 0);
+
+		List<String> emails = new ArrayList<String>();
+		emails.add("casey@amphibian.com");
+		assertTrue(Leagues.invite(l, emails));
+		
+		// create a new member with the same email address
+		String newUserName = this.generateRandomUserName();
+    	Member m = new Member();
+		m.setUserName(newUserName);
+		m.setEmail("casey@amphibian.com");
+		m.setFirstName("John");
+		m.setLastName("Doe");
+		m.setHideEmail(false);
+		m.setMobileNumber("717-555-1212");
+		m.setPassword("test_password");
+		
+		// make sure invite is there right from the creation
+		Member c = Members.create(m);
+		assertTrue(c.getInvitations().size() > 0);
+		
+		// make sure invite is there after load as well
+		c = Members.getByUserId(String.valueOf(c.getId()));
+		assertTrue(c.getInvitations().size() > 0);
+		
+	}
+	
+	@Test
 	public void testStartDraft() {
 		
 		String token = Members.authenticate("test", "password");
@@ -161,6 +203,14 @@ public class LeaguesTest {
     	String un = "johndoe";
     	int r = 1000 + (int)(Math.random() * ((999999 - 1000) + 1));
     	return un + r;
+    	
+    }
+
+    private String generateRandomLeagueName() {
+    	
+    	String ln = "test league ";
+    	int r = 1000 + (int)(Math.random() * ((999999 - 1000) + 1));
+    	return ln + r;
     	
     }
 
