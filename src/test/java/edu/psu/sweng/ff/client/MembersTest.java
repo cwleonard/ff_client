@@ -89,6 +89,7 @@ public class MembersTest
 		m.setPassword("test_password");
 		
 		Member c = Members.create(m);
+		assertNotNull(c.getAccessToken());
 		
     	Members.authenticate(newUserName, "test_password");
 
