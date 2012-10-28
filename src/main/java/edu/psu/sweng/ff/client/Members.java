@@ -147,8 +147,13 @@ public class Members {
 		String uri = u.toString();
 		String id = uri.substring(uri.lastIndexOf('/') + 1);
 
+		MultivaluedMap headers = response.getHeaders();
+		String token = (String) headers.getFirst(TOKEN_HEADER);
+		userToken = token;
+
 		m = getByUserId(id);
-		
+		m.setAccessToken(token);
+
 		return m;
 		
 	}
