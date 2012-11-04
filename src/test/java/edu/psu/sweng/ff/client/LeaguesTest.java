@@ -135,7 +135,7 @@ public class LeaguesTest {
 		assertTrue(c.getInvitations().size() > 0);
 		
 		// make sure invite is there after load as well
-		c = Members.getByUserId(String.valueOf(c.getId()));
+		c = Members.getByUserName(c.getUserName());
 		assertTrue(c.getInvitations().size() > 0);
 		
 	}

@@ -50,7 +50,7 @@ public class MembersTest
     	Members.authenticate(newUserName, "test_password");
     	
 		
-		Member m2 = Members.getByUserId(String.valueOf(m.getId()));
+		Member m2 = Members.getByUserName(m.getUserName());
 		assertEquals("new@email.com", m2.getEmail());
 		
     	
@@ -60,8 +60,8 @@ public class MembersTest
     public void testGetById() {
     	
     	Members.authenticate("test", "password");
-    	Member m = Members.getByUserId("1");
-    	assertEquals(1, m.getId());
+    	Member m = Members.getByUserName("test");
+    	assertEquals("test", m.getUserName());
     	
     }
     
@@ -93,7 +93,7 @@ public class MembersTest
 		
     	Members.authenticate(newUserName, "test_password");
 
-		Member m2 = Members.getByUserId(String.valueOf(c.getId()));
+		Member m2 = Members.getByUserName(c.getUserName());
 		assertEquals(m2.getEmail(), m.getEmail());
     	
     }

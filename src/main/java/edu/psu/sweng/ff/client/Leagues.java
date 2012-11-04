@@ -33,7 +33,7 @@ public class Leagues {
 
 	public static List<League> getByMember(Member m) {
 	
-		String url = BASE_URL + "?member=" + m.getId();
+		String url = BASE_URL + "?member=" + m.getUserName();
 	
 		WebResource r = c.resource(url);
 		ClientResponse response = r.header(TOKEN_HEADER, userToken)

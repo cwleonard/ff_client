@@ -93,30 +93,30 @@ public class Members {
 	
 	}
 
-	public static Member getByUserId(String id) {
-		
-		String url = BASE_URL + "id/" + id;
-	
-		WebResource r = c.resource(url);
-		ClientResponse response = r.header(TOKEN_HEADER, userToken)
-				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-		
-		Member m = null;
-		if (response.getStatus() == Status.OK.getStatusCode()) {
-			String json = response.getEntity(String.class);
-			Gson gson = new Gson();
-			m = gson.fromJson(json, Member.class);
-		} else {
-			System.err.println(response);
-		}
-		
-		return m;
-	
-	}
+//	public static Member getByUserId(String id) {
+//		
+//		String url = BASE_URL + "id/" + id;
+//	
+//		WebResource r = c.resource(url);
+//		ClientResponse response = r.header(TOKEN_HEADER, userToken)
+//				.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+//		
+//		Member m = null;
+//		if (response.getStatus() == Status.OK.getStatusCode()) {
+//			String json = response.getEntity(String.class);
+//			Gson gson = new Gson();
+//			m = gson.fromJson(json, Member.class);
+//		} else {
+//			System.err.println(response);
+//		}
+//		
+//		return m;
+//	
+//	}
 
 	public static Member update(Member m) {
 		
-		String url = BASE_URL + "id/" + m.getId();
+		String url = BASE_URL + m.getUserName();
 
 		Gson gson = new Gson();
 		String json = gson.toJson(m);
@@ -151,7 +151,7 @@ public class Members {
 		String token = (String) headers.getFirst(TOKEN_HEADER);
 		userToken = token;
 
-		m = getByUserId(id);
+		m = getByUserName(m.getUserName());
 		m.setAccessToken(token);
 
 		return m;
