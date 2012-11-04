@@ -100,7 +100,7 @@ public class TeamsTest {
 	}
 
 	@Test
-	public void testLoad2() {
+	public void testLoadRosters() {
 		
 		String token = Members.authenticate("test", "password");
 		Leagues.setUserToken(token);

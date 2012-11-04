@@ -52,16 +52,6 @@ public class MembersTest
 		
 		Member m2 = Members.getByUserName(m.getUserName());
 		assertEquals("new@email.com", m2.getEmail());
-		
-    	
-    }
-    
-    @Test
-    public void testGetById() {
-    	
-    	Members.authenticate("test", "password");
-    	Member m = Members.getByUserName("test");
-    	assertEquals("test", m.getUserName());
     	
     }
     

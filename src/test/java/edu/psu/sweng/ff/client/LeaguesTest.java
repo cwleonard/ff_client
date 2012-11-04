@@ -185,7 +185,6 @@ public class LeaguesTest {
 		assertEquals(10, r2.getStartingPlayers().size());
 		assertEquals(10, r2.getBenchPlayers().size());
 		
-		
 	}
 	
 	@Test
