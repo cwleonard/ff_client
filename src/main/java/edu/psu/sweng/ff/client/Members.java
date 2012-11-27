@@ -1,15 +1,21 @@
 package edu.psu.sweng.ff.client;
 
 import java.net.URI;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import edu.psu.sweng.ff.common.Member;
@@ -18,11 +24,31 @@ public class Members {
 
 	private final static String TOKEN_HEADER = "X-UserToken";
 	
-	private final static String BASE_URL = "http://www.amphibian.com/ff_server/resource/member/";
+	private final static String BASE_URL = "https://amphibian.com/ff_server/resource/member/";
 
 	private static String userToken;
 	
 	private static Client c = Client.create();
+	
+	//TODO: don't do this if we had a "real" (not self-signed) ssl certificate
+	static {
+		
+		TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
+		    public X509Certificate[] getAcceptedIssuers(){return null;}
+		    public void checkClientTrusted(X509Certificate[] certs, String authType){}
+		    public void checkServerTrusted(X509Certificate[] certs, String authType){}
+		}};
+
+		// Install the all-trusting trust manager
+		try {
+		    SSLContext sc = SSLContext.getInstance("TLS");
+		    sc.init(null, trustAllCerts, new SecureRandom());
+		    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
+	}
 	
 	public static String authenticate(String username, String password) {
 		
